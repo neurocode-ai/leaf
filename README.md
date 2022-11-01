@@ -25,4 +25,4 @@ print(w.grad)  # dy/dw
 ...
 
 ## License
-All code written is to be held under a general MIT license, please see [LICENSE]() for specific information.
+All code written is to be held under a general MIT license, please see [LICENSE](https://github.com/neurocode-ai/leaf/blob/main/LICENSE) for specific information.
