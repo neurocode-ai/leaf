@@ -9,8 +9,9 @@ crate-type = ["cdylib"]
 [dependencies]
 ndarray = "0.15.6"
 numpy = "0.15"
+ordered-float = "2.10.0"
 
 [dependencies.pyo3]
-version = "0.17.2"
+version = "0.15.1"
 features = ["extension-module"]
 

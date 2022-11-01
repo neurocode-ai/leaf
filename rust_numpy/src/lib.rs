@@ -3,8 +3,9 @@ use numpy::{
     IntoPyArray,
     PyArray1,
     PyArray2,
-    PyArrayDyn,
-    PyReadonlyArrayDyn
+    PyArray4,
+    PyReadonlyArrayDyn,
+    PyReadonlyArray4
 };
 use pyo3::prelude::{
     pymodule,
@@ -14,8 +15,8 @@ use pyo3::prelude::{
 };
 
 mod rust_fn {
-    use ndarray::{arr1, Array1};
-    use numpy::ndarray::{ArrayViewD, ArrayViewMutD};
+    use ndarray::{arr1, Array1, Array2, Array4};
+    use numpy::ndarray::{ArrayViewD};
     use ordered_float::OrderedFloat;
 
     pub fn max_min(x: &ArrayViewD<'_, f64>) -> Array1<f64> {
@@ -35,6 +36,15 @@ mod rust_fn {
         let result_array = arr1(&[max_val, min_val]);
         result_array
     }
+
+    pub fn rusum(x: &Array4<f64>) -> Array2<f64> {
+        let rustsum = Array2
+        for h in 0..256 {
+            for w in 0..256 {
+
+            }
+        }
+    }
 }
 
 #[pymodule]
@@ -42,11 +52,20 @@ fn rust_numpy(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
     #[pyfn(m)]
     fn max_min<'py>(
         py: Python<'py>,
-        x: PyReaonlyArrayDyn<f64>
+        x: PyReadonlyArrayDyn<f64>
     ) -> &'py PyArray1<f64> {
         let array = x.as_array();
         let result_array = rust_fn::max_min(&array);
-        result.array.into_pyarray(py)
+        result_array.into_pyarray(py)
+    }
+
+    fn rusum<'py>(
+        py: Python<'py>,
+        x: PyReadonlyArray4<f64>
+    ) -> &'py PyArray2<f64> {
+        let array = x.as_array();
+        let rustsum = rust_fn::rusum(&array);
+        rustsum.into_pyarray(py)
     }
 
     #[pyfn(m)]
