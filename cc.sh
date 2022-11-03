@@ -19,5 +19,6 @@ function traverse() {
   done
 }
 
+printf "Removing __pycache__/ recursively..."
 traverse "."
-
+printf "OK\n"
