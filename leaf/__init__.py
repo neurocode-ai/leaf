@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 File created: 2022-11-01
-Last edited: 2022-11-03
+Last edited:  2022-11-03
 """
 from .tensor import Tensor
 
