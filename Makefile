@@ -2,5 +2,5 @@ build:
 	cd leafrs && maturin develop --release
 
 clean:
-	cd leafrs && cargo clean
+	cd leafrs && rm -f Cargo.lock && cargo clean
 
