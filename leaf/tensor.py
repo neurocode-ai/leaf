@@ -24,7 +24,7 @@ SOFTWARE.
 File created: 2022-11-01
 Last edited:  2022-11-05
 """
-
+from __future__ import annotations
 import numpy as np
 from .types import Integer, Float, Array, Boolean
 from typing import Union, Tuple, List
@@ -83,3 +83,10 @@ class Tensor(object):
     @classmethod
     def eye(cls, dims, **kwargs) -> Tensor:
         return cls(np.eye(dims), **kwargs)
+
+    def detach(self) -> Tensor:
+        """ Create a copy of the current Tensor that is not part of the 
+        dynamic DAG. As such, the new Tensor does not, and can not,
+        require grad because it is not part of any context nor DAG.
+        """
+        return Tensor(self.data, dtype=self.dtype, requires_grad=False)
