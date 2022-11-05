@@ -27,15 +27,15 @@ Last edited:  2022-11-05
 import numpy as np
 from leaf import Tensor
 from typing import List
-from leaf.types import Boolean, Array
+from leaf.types import Boolean
 
 def _tensors_require_grad(*tensors: List[Tensor]) -> Boolean:
     return any(t.requires_grad for t in tensors if isinstance(t, Tensor))
 
-def _verify_tensors(*tensors: List[Tensor]) -> List[Array]:
+def _verify_tensors(*tensors: List[Tensor]) -> List[np.ndarray]:
     return [_extract_data(t) for t in tensors]
 
-def _extract_data(tensor: Tensor) -> Array:
+def _extract_data(tensor: Tensor) -> np.ndarray:
     """ TEMPORARY!!!! EDIT this function """
     return tensor.data
 
