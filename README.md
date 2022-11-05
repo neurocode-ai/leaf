@@ -1,4 +1,6 @@
 # leaf, the minimal deep learning framework
+![Builds status badge](https://github.com/neurocode-ai/leaf/actions/workflows/builds.yml/badge.svg)
+
 In its essence, leaf is a [NumPy](https://numpy.org/) only implementation of the
 well known [PyTorch](https://pytorch.org/) framework. The convolutional operations
 accelerated with Rust binaries enable a robust API for deep learning without GPU. 
