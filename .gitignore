@@ -128,5 +128,5 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# Cargo.toml 
-Cargo.toml
+# Cargo lock
+Cargo.lock
