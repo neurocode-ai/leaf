@@ -22,9 +22,71 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 File created: 2022-11-01
-Last edited:  2022-11-03
+Last edited:  2022-11-05
 """
+from __future__ import annotations
+import numpy as np
+from .types import Integer, Float, Array, Boolean
+from typing import Union, Tuple, List
 
 class Tensor(object):
-    pass
+    """ Definition and implementation of the Tensor class.
 
+    Parameters
+    ----------
+    data: list | tuple | int | float | np.ndarray
+        The data to create a new Tensor of. Will always be 
+        cast to a numpy array after initialization.
+    dtype: int | float | np.float32 | np.int16
+        The datatype specification for the Tensor. np.float32
+        is currently the default datatype, subject to change.
+    requires_grad: bool
+        Specify whether the Tensor should store gradients
+        related to DAG during backwards pass.
+    """
+    def __init__(self,
+            data: Union[Integer, Float, Tuple, List, Array],
+            dtype: Union[Integer, Float, np.float32, np.int16] = np.float32,
+            requires_grad: Boolean = False) -> None:
+
+        if isinstance(data, (list, tuple)):
+            data = np.array(data).astype(dtype)
+
+        if not hasattr(data, '__iter__'):
+            data = np.array([data]).astype(dtype)
+
+        if isinstance(data, np.ndarray):
+            data = data.astype(dtype)
+
+        self.data = data
+        self.grad = None
+        self._ctx = None
+        self._is_leaf = True
+        self.requires_grad = requires_grad
+
+    @property
+    def shape(self) -> Tuple:
+        return self.data.shape
+    
+    @property
+    def dtype(self) -> Union[np.float32, np.int16]:
+        return self.data.dtype
+
+    @classmethod
+    def zeros(cls, *shape, **kwargs) -> Tensor:
+        return cls(np.zeros(shape), **kwargs)
+    
+    @classmethod
+    def ones(cls, *shape, **kwargs) -> Tensor:
+        return cls(np.zeros(shape), **kwargs)
+    
+    @classmethod
+    def eye(cls, dims, **kwargs) -> Tensor:
+        return cls(np.eye(dims), **kwargs)
+
+    def detach(self) -> Tensor:
+        """ Create a copy of the current Tensor that is not part of the 
+        dynamic DAG. As such, the new Tensor does not, and can not,
+        require grad because it is not part of any context nor DAG.
+        """
+        return Tensor(self.data, dtype=self.dtype, requires_grad=False)

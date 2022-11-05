@@ -22,7 +22,49 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 File created: 2022-11-01
-Last edited:  2022-11-03
+Last edited:  2022-11-05
 """
-from .tensor import Tensor
 
+from typing import Iterable
+from .tensor import Tensor
+from .types import *
+
+def is_tensor(obj: object) -> bool:
+    """ Returns True if `obj` is a Tensor.
+
+    Parameters
+    ----------
+    obj: object
+        The object to test.
+
+    """
+    return isinstance(obj, leaf.Tensor)
+
+def are_tensors(objs: Iterable[object]) -> bool:
+    """ Returns True if all objects in `objs` are Tensors.
+    Otherwise returns False, obviously.
+
+    Parameters
+    ----------
+    objs: list | tuple | iterable
+        The iterable object of objects to test.
+    """
+    return all(map(is_tensor, objs))
+
+# Register all standard CPU ops for Tensor...
+import os
+import inspect
+import importlib
+from functools import partialmethod
+
+def _register_from_import(namespace):
+    for name, func in inspect.getmembers(namespace, inspect.isclass):
+        setattr(Tensor, name.lower(), partialmethod(func.apply))
+
+opfiles = os.listdir(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'functions'))
+opfiles = [f.split('.')[0] for f in opfiles if f.endswith('_ops.py')]
+for optype in opfiles:
+    try:
+        _register_from_import(importlib.import_module('leaf.functions.' + optype))
+    except ImportError as error:
+        print(f'Could not import module {optype}, {error=}')
