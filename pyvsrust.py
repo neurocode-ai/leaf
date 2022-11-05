@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 File created: 2022-11-01
-Last edited:  2022-11-03
+Last edited:  2022-11-05
 """
 import leafrs as rs
 import numpy as np
@@ -66,6 +66,6 @@ rusum = rs.rusum(data).sum()
 t_ru = time.time() - t_rustart
 info('OK\n')
 info(f'Time: {t_ru:.3f} seconds\n')
-info(f'Rust was {100.0*(1-(t_ru/t_py)):.2f}% / {t_py-t_ru:.3f} seconds faster\n')
+info(f'Rust took {100.0*(t_ru/t_py):.2f}% of the time Python took\n')
+info(f'Rust was {t_py-t_ru:.3f} seconds faster\n')
 info(f'Same sum of matrix? {rusum == pysum}\n')
-
