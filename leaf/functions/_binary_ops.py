@@ -26,8 +26,11 @@ Last edited:  2022-11-05
 """
 import numpy as np
 from .function import Function
+from leaf.types import Array
+from typing import Tuple
 
-def _unbroadcast(arr, shape):
+def _unbroadcast(arr: Array, shape: Tuple) -> Array:
+    """ Revert broadcasting on an array to desired original shape. """
     return np.lib.stride_tricks.as_stride(arr, shape).copy()
 
 class Add(Function):
