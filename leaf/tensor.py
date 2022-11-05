@@ -22,9 +22,36 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 File created: 2022-11-01
-Last edited:  2022-11-03
+Last edited:  2022-11-05
 """
 
+import numpy as np
+from typing import Union
+
 class Tensor(object):
-    pass
+    def __init__(self, data: Union[list, tuple, int, float, np.ndarray],
+            dtype=np.float32, requires_grad=False):
+        self.requires_grad = requires_grad
+
+        if isinstance(data, (list, tuple)):
+            data = np.array(data).astype(dtype)
+
+        if isinstance(data, (int, float)):
+            data = np.array([data]).astype(dtype)
+
+        if isinstance(data, np.ndarray):
+            data = data.astype(dtype)
+
+        self.data = data
+        self.grad = None
+        self._ctx = None
+        self.is_leaf = True
+
+    @property
+    def shape(self):
+        return self.data.shape
+    
+    @property
+    def dtype(self):
+        return self.data.dtype
 
