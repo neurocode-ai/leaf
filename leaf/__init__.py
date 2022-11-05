@@ -25,16 +25,28 @@ File created: 2022-11-01
 Last edited:  2022-11-05
 """
 
+from typing import Iterable
 from .tensor import Tensor
 
-def is_tensor(obj):
-    """ Returns True if `obj` is a leaf Tensor.
+def is_tensor(obj: object) -> bool:
+    """ Returns True if `obj` is a Tensor.
 
     Parameters
     ----------
-    obj: Object
+    obj: object
         The object to test.
 
     """
     return isinstance(obj, leaf.Tensor)
+
+def are_tensors(objs: Iterable[object]) -> bool:
+    """ Returns True if all objects in `objs` are Tensors.
+    Otherwise returns False, obviously.
+
+    Parameters
+    ----------
+    objs: list | tuple | iterable
+        The iterable object of objects to test.
+    """
+    return all(map(is_tensor, objs))
 
