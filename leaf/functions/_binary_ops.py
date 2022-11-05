@@ -26,15 +26,17 @@ Last edited:  2022-11-05
 """
 import numpy as np
 from .function import Function
+from typing import Tuple
 
-def _unbroadcast(arr, shape):
+def _unbroadcast(arr: np.ndarray, shape: Tuple) -> np.ndarray:
+    """ Revert broadcasting on an array to desired original shape. """
     return np.lib.stride_tricks.as_stride(arr, shape).copy()
 
 class Add(Function):
-    def forward(self, x, y):
+    def forward(self, x, y) -> np.ndarray:
         self.save_for_backward(x.shape, y.shape)
         return x + y
     
-    def backward(self, grad):
+    def backward(self, grad) -> Tuple[np.ndarray]:
         xshape, yshape, = self.saved_tensors
         return _unbroadcast(grad, xshape), _unbroadcast(grad, yshape)

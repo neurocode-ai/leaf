@@ -32,10 +32,10 @@ from leaf.types import Boolean
 def _tensors_require_grad(*tensors: List[Tensor]) -> Boolean:
     return any(t.requires_grad for t in tensors if isinstance(t, Tensor))
 
-def _verify_tensors(*tensors):
+def _verify_tensors(*tensors: List[Tensor]) -> List[np.ndarray]:
     return [_extract_data(t) for t in tensors]
 
-def _extract_data(tensor):
+def _extract_data(tensor: Tensor) -> np.ndarray:
     """ TEMPORARY!!!! EDIT this function """
     return tensor.data
 
@@ -55,7 +55,7 @@ class Function(object):
         raise NotImplementedError(f'backward pass not implemented for {type(self)}')
     
     @classmethod
-    def apply(cls, *tensors) -> Tensor: 
+    def apply(cls, *tensors: List[Tensor]) -> Tensor: 
         context = cls(*tensors)
         results = Tensor(context.forward(*_verify_tensors(*tensors)),
                          requires_grad=context.requires_grad)
