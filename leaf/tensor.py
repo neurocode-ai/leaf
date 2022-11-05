@@ -26,6 +26,8 @@ Last edited:  2022-11-05
 """
 
 import numpy as np
+from .types import Integer, Float, Array, Boolean
+from typing import Union, Tuple, List
 
 class Tensor(object):
     """ Definition and implementation of the Tensor class.
@@ -43,17 +45,14 @@ class Tensor(object):
         related to DAG during backwards pass.
     """
     def __init__(self,
-            data,
-            *args,
-            dtype=np.float32,
-            requires_grad=False,
-            **kwargs):
-        self.requires_grad = requires_grad
+            data: Union[Integer, Float, Tuple, List, Array],
+            dtype: Union[Integer, Float, np.float32, np.int16] = np.float32,
+            requires_grad: Boolean = False) -> None:
 
         if isinstance(data, (list, tuple)):
             data = np.array(data).astype(dtype)
 
-        if isinstance(data, (int, float)):
+        if not hasattr(data, '__iter__'):
             data = np.array([data]).astype(dtype)
 
         if isinstance(data, np.ndarray):
@@ -63,6 +62,7 @@ class Tensor(object):
         self.grad = None
         self._ctx = None
         self.is_leaf = True
+        self.requires_grad = requires_grad
 
     @property
     def shape(self):
@@ -71,4 +71,3 @@ class Tensor(object):
     @property
     def dtype(self):
         return self.data.dtype
-
