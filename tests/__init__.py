@@ -21,5 +21,9 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
+File created: 2022-11-01
+Last edited: 2022-11-05
+
 Initialize the pytest module, nothing else has to exist in this file.
 """
+
