@@ -1,7 +1,40 @@
 # leaf, the minimal deep learning framework
-In its essence, leaf is a NumPy only implementation of the well known PyTorch framework. 
-The convolutional operations accelerated with Rust binaries enable a robust API for deep learning without GPU.
-Support for GPU is provided through pyopencl which allows access to parallel compute devices in Python.
+In its essence, leaf is a [NumPy](https://numpy.org/) only implementation of the
+well known [PyTorch](https://pytorch.org/) framework. The convolutional operations
+accelerated with Rust binaries enable a robust API for deep learning without GPU. 
+Support for GPU is provided through [pyopencl](https://documen.tician.de/pyopencl/)
+which allows access to parallel compute devices in Python.
+
+## Setup and install
+The first thing you are going to need is a Rust compiler. Easiest way to install it
+is by using the toolchain manager `rustup`. Go to
+[this](https://www.rust-lang.org/tools/install) link and following the instructions.
+
+
+The second step is to create and activate a virtual environment. This can be done
+with the `venv` module like this.
+```
+$ python3 -m venv my-venv
+$ source my-venv/bin/activate
+(my-venv) $ 
+```
+
+
+Next step is to install the required Python liraries. Easiest way to do this is with
+`pip` in the following way.
+```
+$ python3 -m pip install -r requirements.txt
+```
+
+
+Last step is to compile the Rust binary so that we can access the Rust modules from 
+our Python code. There is a Makefile for building everything, simply run it by typing
+`make` (To remove all compiled binaries and clean up the Rust directory, instead run
+`make clean`).
+
+
+Now you can verify that everything has been set up correctly by running the
+`pyvsrust.py` script, which runs a minimal benchmark test on the Rust binaries.
 
 ## Example
 ...
