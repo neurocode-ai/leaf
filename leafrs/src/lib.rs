@@ -22,7 +22,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 File created: 2022-11-01
-Last edited:  2022-11-03
+Last edited:  2022-11-05
+
+Tutorial on how to bind Python and Rust via NumPy
+https://itnext.io/how-to-bind-python-numpy-with-rust-ndarray-2efa5717ed21
 */
 
 use ndarray;
