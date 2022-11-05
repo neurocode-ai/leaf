@@ -25,8 +25,15 @@ File created: 2022-11-05
 Last edited:  2022-11-05
 """
 import builtins
-import leaf
-from typing import Any, List, Sequence, Tuple, Union
+import numpy as np
+from typing import Union, Tuple, List
 
 # A number of convenient aliases for composite types
-Number = Union[builtins.int, builtins.float, builtins.bool]
+Integer = builtins.int
+Float = builtins.float
+String = builtins.str
+Boolean = builtins.bool
+Array = np.ndarray
+
+Datatype = Union[Integer, Float, np.float32, np.int16]
+Data = Union[Integer, Float, Tuple, List, Array]
