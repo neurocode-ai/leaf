@@ -26,11 +26,28 @@ Last edited:  2022-11-05
 """
 
 import numpy as np
-from typing import Union
 
 class Tensor(object):
-    def __init__(self, data: Union[list, tuple, int, float, np.ndarray],
-            dtype=np.float32, requires_grad=False):
+    """ Definition and implementation of the Tensor class.
+
+    Parameters
+    ----------
+    data: list | tuple | int | float | np.ndarray
+        The data to create a new Tensor of. Will always be 
+        cast to a numpy array after initialization.
+    dtype: int | float | np.dtype
+        The datatype specification for the Tensor. np.float32
+        is currently the default datatype.
+    requires_grad: bool
+        Specify whether the Tensor should store gradients
+        related to DAG during backwards pass.
+    """
+    def __init__(self,
+            data,
+            *args,
+            dtype=np.float32,
+            requires_grad=False,
+            **kwargs):
         self.requires_grad = requires_grad
 
         if isinstance(data, (list, tuple)):
