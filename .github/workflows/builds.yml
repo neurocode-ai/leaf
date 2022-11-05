@@ -21,19 +21,37 @@ jobs:
     - name: Build
       run: |
         python3 -m pip install --upgrade pip
+        python3 -m venv venv
+        source venv/bin/activate
         make
 
   build-macos:
     runs-on: macos-latest
     steps:
     - uses: actions/checkout/@v2
+    - name: Set up Python3.8
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
     - name: Build
-      run: make
+      run: |
+        python3 -m pip install --upgrade pip
+        python3 -m venv venv
+        source venv/bin/activate
+
 
   build-windows:
     runs-on: windows-latest
     steps:
     - uses: actions/checkout/@v2
+    - name: Set up Python3.8
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
     - name: Build
-      run: make
+      run: |
+        python3 -m pip install --upgrade pip
+        python3 -m venv venv
+        source venv/bin/activate
+        make
 
