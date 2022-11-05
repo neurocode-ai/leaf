@@ -32,8 +32,11 @@ import argparse
 from datetime import datetime
 
 strformat = '%Y-%m-%d %H:%M:%S'
-def info(s):
-    sys.stdout.write(f'[{datetime.now().strftime(strformat)}] {s}')
+def info(s, strftime=True):
+    strf = f'[{datetime.now().strftime(strformat)}] '
+    strf = strf + s if strftime else s
+    sys.stdout.write(strf)
+    sys.stdout.flush()
 
 parser = argparse.ArgumentParser(
     prog='pyvsrust',
@@ -44,27 +47,27 @@ args = parser.parse_args()
 
 dimensions = tuple([int(d) for d in args.d])
 
-info('Running performanc test Python vs Rust API\n')
-info(f'Generating test data with shape: {dimensions}...\n')
+info('Running performance test Python vs Rust API\n')
+info(f'Generating test data with shape: {dimensions}...')
 data = np.random.rand(*dimensions)
-info('OK\n')
+info('OK\n', strftime=False)
 
 pysum = 0
-info('Starting Python job...\n')
+info('Starting Python job...')
 t_pystart = time.time()
 for h in range(data.shape[2]):
     for w in range(data.shape[3]):
         pysum += data[:, :, h, w]
 pysum = pysum.sum()
 t_py = time.time() - t_pystart
-info('OK\n')
+info('OK\n', strftime=False)
 info(f'Time: {t_py:.3f} seconds\n')
 
-info('Starting Rust API job...\n')
+info('Starting Rust API job...')
 t_rustart = time.time()
 rusum = rs.rusum(data).sum()
 t_ru = time.time() - t_rustart
-info('OK\n')
+info('OK\n', strftime=False)
 info(f'Time: {t_ru:.3f} seconds\n')
 info(f'Rust took {100.0*(t_ru/t_py):.2f}% of the time Python took\n')
 info(f'Rust was {t_py-t_ru:.3f} seconds faster\n')
