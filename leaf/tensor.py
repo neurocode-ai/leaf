@@ -37,9 +37,9 @@ class Tensor(object):
     data: list | tuple | int | float | np.ndarray
         The data to create a new Tensor of. Will always be 
         cast to a numpy array after initialization.
-    dtype: int | float | np.dtype
+    dtype: int | float | np.float32 | np.int16
         The datatype specification for the Tensor. np.float32
-        is currently the default datatype.
+        is currently the default datatype, subject to change.
     requires_grad: bool
         Specify whether the Tensor should store gradients
         related to DAG during backwards pass.
@@ -61,13 +61,25 @@ class Tensor(object):
         self.data = data
         self.grad = None
         self._ctx = None
-        self.is_leaf = True
+        self._is_leaf = True
         self.requires_grad = requires_grad
 
     @property
-    def shape(self):
+    def shape(self) -> Tuple:
         return self.data.shape
     
     @property
-    def dtype(self):
+    def dtype(self) -> Union[np.float32, np.int16]:
         return self.data.dtype
+
+    @classmethod
+    def zeros(cls, *shape, **kwargs) -> Tensor:
+        return cls(np.zeros(shape), **kwargs)
+    
+    @classmethod
+    def ones(cls, *shape, **kwargs) -> Tensor:
+        return cls(np.zeros(shape), **kwargs)
+    
+    @classmethod
+    def eye(cls, dims, **kwargs) -> Tensor:
+        return cls(np.eye(dims), **kwargs)
