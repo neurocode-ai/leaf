@@ -15,7 +15,12 @@ jobs:
     steps:
     - uses: actions/checkout/@v2
     - name: Build
-      run: make
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+      run: |
+        python3 -m pip install --upgrade pip
+        make
 
   build-macos:
     runs-on: macos-latest
