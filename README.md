@@ -20,7 +20,7 @@ $ source my-venv/bin/activate
 ```
 
 
-Next step is to install the required Python liraries. Easiest way to do this is with
+Next step is to install the required Python libraries. Easiest way to do this is with
 `pip` in the following way.
 ```
 $ python3 -m pip install -r requirements.txt
@@ -54,8 +54,6 @@ print(w.grad)  # dy/dw
 ## Neural networks
 ...
 
-## Installation
-...
 
 ## License
 All code written is to be held under a general MIT license, please see [LICENSE](https://github.com/neurocode-ai/leaf/blob/main/LICENSE) for specific information.
