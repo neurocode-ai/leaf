@@ -23,12 +23,10 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: "3.8"
-    - name: Dependencies and build
+    - name: Dependencies, build and test
       run: |
         python3 -m pip install --upgrade pip
         python3 -m venv venv
         source venv/bin/activate
         make
-
-    - name: Test with unittest
-      run: python3 -m unittest
+        python3 -m unittest
