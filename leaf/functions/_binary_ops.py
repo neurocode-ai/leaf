@@ -25,6 +25,7 @@ File created: 2022-11-05
 Last edited:  2022-11-05
 """
 import numpy as np
+import leafrs as rs
 from .function import Function
 from typing import Tuple
 
@@ -35,7 +36,7 @@ def _unbroadcast(arr: np.ndarray, shape: Tuple) -> np.ndarray:
 class Add(Function):
     def forward(self, x, y) -> np.ndarray:
         self.save_for_backward(x.shape, y.shape)
-        return x + y
+        return rs.add(x, y)
     
     def backward(self, grad) -> Tuple[np.ndarray]:
         xshape, yshape, = self.saved_tensors
