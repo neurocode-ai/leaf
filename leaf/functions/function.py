@@ -27,7 +27,7 @@ Last edited:  2022-11-05
 import numpy as np
 from leaf import Tensor
 from typing import List
-from leaf.types import Boolean
+from leaf.types import Boolean, String
 
 def _tensors_require_grad(*tensors: List[Tensor]) -> Boolean:
     return any(t.requires_grad for t in tensors if isinstance(t, Tensor))
@@ -40,8 +40,9 @@ def _extract_data(tensor: Tensor) -> np.ndarray:
     return tensor.data
 
 class Function(object):
-    def __init__(self, *tensors: List[Tensor]):
+    def __init__(self, device: String, *tensors: List[Tensor]):
         self.parents = [t for t in tensors if isinstance(t, Tensor)]
+        self.device = device
         self.saved_tensors = []
         self.requires_grad = _tensors_require_grad(*tensors)
 
@@ -56,8 +57,9 @@ class Function(object):
     
     @classmethod
     def apply(cls, *tensors: List[Tensor]) -> Tensor: 
-        context = cls(*tensors)
+        context = cls(*tensors[0].device, *tensors)
         results = Tensor(context.forward(*_verify_tensors(*tensors)),
-                         requires_grad=context.requires_grad)
+                         requires_grad=context.requires_grad,
+                         device=context.device)
         results._ctx = context
         return results
