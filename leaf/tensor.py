@@ -26,7 +26,7 @@ Last edited:  2022-11-05
 """
 from __future__ import annotations
 import numpy as np
-from .types import Integer, Float, Array, Boolean
+from .types import Integer, Float, Array, Boolean, String
 from typing import Union, Tuple, List
 
 class Tensor(object):
@@ -43,11 +43,16 @@ class Tensor(object):
     requires_grad: bool
         Specify whether the Tensor should store gradients
         related to DAG during backwards pass.
+    device: str
+        Determines on what device the Tensor operations will be
+        performed on. Defaults to 'CPU', valid options are
+        ('CPU', 'GPU', 'Rust'). GPU currently not supported. 
     """
     def __init__(self,
             data: Union[Integer, Float, Tuple, List, Array],
             dtype: Union[Integer, Float, np.float32, np.int16] = np.float32,
-            requires_grad: Boolean = False) -> None:
+            requires_grad: Boolean = False,
+            device: String = 'CPU') -> None:
 
         if isinstance(data, (list, tuple)):
             data = np.array(data).astype(dtype)
@@ -62,6 +67,7 @@ class Tensor(object):
         self.grad = None
         self._ctx = None
         self._is_leaf = True
+        self.device = device
         self.requires_grad = requires_grad
 
     @property
@@ -88,5 +94,6 @@ class Tensor(object):
         """ Create a copy of the current Tensor that is not part of the 
         dynamic DAG. As such, the new Tensor does not, and can not,
         require grad because it is not part of any context nor DAG.
+        Subsequentially move the Tensor to CPU device, if it was on other.
         """
-        return Tensor(self.data, dtype=self.dtype, requires_grad=False)
+        return Tensor(self.data, dtype=self.dtype, requires_grad=False, device='CPU')
