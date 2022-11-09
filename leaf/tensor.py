@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 File created: 2022-11-01
-Last edited:  2022-11-05
+Last edited:  2022-11-09
 """
 from __future__ import annotations
 import numpy as np
@@ -97,3 +97,9 @@ class Tensor(object):
         Subsequentially move the Tensor to CPU device, if it was on other.
         """
         return Tensor(self.data, dtype=self.dtype, requires_grad=False, device='CPU')
+
+    def backward(self, allow_fill=True):
+        """ """
+        raise NotImplementedError(
+            f'The backward pass functionality has not yet been implemented for {self}.')
+
