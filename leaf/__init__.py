@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 File created: 2022-11-01
-Last edited:  2022-11-05
+Last edited:  2022-11-17
 """
 
 from typing import Iterable
@@ -48,10 +48,11 @@ def are_tensors(objs: Iterable[object]) -> bool:
     ----------
     objs: list | tuple | iterable
         The iterable object of objects to test.
+
     """
     return all(map(is_tensor, objs))
 
-# Register all standard CPU ops for Tensor...
+# Register all standard CPU ops for Tensor.
 import os
 import inspect
 import importlib
