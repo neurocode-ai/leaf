@@ -41,7 +41,9 @@ Now you can verify that everything has been set up correctly by running the
 `pyvsrust.py` script, which runs a minimal benchmark test on the Rust binaries.
 
 ## Example
-...
+Below is a brief example of creating Tensors and performing an operation with them,
+then aggregating their result using a `reduce` operation which allows us to
+calculate their respective gradients using the `autograd` framework.
 ```python
 from leaf import Tensor
 
@@ -56,8 +58,7 @@ print(w.grad)  # dy/dw
 ```
 
 ## Neural networks
-...
-
+This is a work in progress. Will be implemented under the `leaf.nn` module.
 
 ## License
 All code written is to be held under a general MIT license, please see [LICENSE](https://github.com/neurocode-ai/leaf/blob/main/LICENSE) for specific information.
