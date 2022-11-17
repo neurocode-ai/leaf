@@ -27,13 +27,57 @@ Last edited:  2022-11-17
 from leaf import Tensor
 
 class Module(object):
+    """ Parent class for the neural network building blocks, i.e. so called Modules.
+    They each define specific forward pass functionality based on their needs that 
+    is invoked by calling the module object with the input tensor. No __init__ method
+    is defined for parent class, please see respective implementations for specific
+    information and implementation details.
+
+    """
     def __call__(self, input_):
         raise self.forward(input_)
     
     def forward(self, input_, *args, **kwargs):
+        """ Each respective neural network module has to implement this depending on funcionality. """
         raise NotImplementedError(
             f'User defined nn.Module {self} has not implemented forward pass.'
         )
+    
+    def parameters(self):
+        pass
 
 class Sequential(object):
-    pass
+    """ A high-level wrapper for the module object, simplifies the forward pass when multiple
+    operations are needed to perform in order. Follows the same function convention as the
+    main module object, namely, __call__(..), forward(..), and parameters(),
+    that make up the API for neural networks.
+
+    Parameters
+    ----------
+    *modules: iterable | list | tuple
+        The collection of modules stored sequentially.
+
+    """
+    def __init__(self, *modules):
+        if not all(isinstance(m, Module) for m in modules):
+            raise ValueError(
+                f'Not all objects provided to {self} is a module, {modules}.'
+            )
+        self._modules = modules
+
+    def __call__(self, input_):
+        return self.forward(input_)
+
+    def forward(self, input_):
+        """ Return the resulting tensor after applying all sequential forward passes. """
+        x = input_
+        for module in self._modules:
+            x = module(x)
+        return x 
+
+    def parameters(self):
+        """ Return a list of all tensor parameters requiring gradient from stored module objects. """
+        params = []
+        for module in self._modules:
+            params.extend(module.parameters())
+        return params
