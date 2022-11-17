@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 File created: 2022-11-05
-Last edited:  2022-11-05
+Last edited:  2022-11-09
 """
 import numpy as np
 import leafrs as rs
@@ -41,3 +41,13 @@ class Add(Function):
     def backward(self, grad) -> Tuple[np.ndarray]:
         xshape, yshape, = self.saved_tensors
         return _unbroadcast(grad, xshape), _unbroadcast(grad, yshape)
+
+class Sub(Function):
+    def forward(self, x, y) -> np.ndarray:
+        self.save_for_backward(x.shape, y.shape)
+        return x - y
+    
+    def backward(self, grad) -> Tuple[np.ndarray]:
+        xshape, yshape, = self.saved_tensors
+        return _unbroadcast(grad, xshape), _unbroadcast(grad, yshape)
+
