@@ -47,6 +47,7 @@ class Tensor(object):
         Determines on what device the Tensor operations will be
         performed on. Defaults to 'CPU', valid options are
         ('CPU', 'GPU', 'Rust'). GPU currently not supported. 
+
     """
     def __init__(self,
             data: Union[Integer, Float, Tuple, List, Array],
