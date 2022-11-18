@@ -22,12 +22,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 File created: 2022-11-01
-Last edited:  2022-11-17
+Last updated: 2022-11-18
 """
+
 from __future__ import annotations
-import numpy as np
-from .types import Integer, Float, Array, Boolean, String
 from typing import Union, Tuple, List
+import numpy as np
 
 class Tensor(object):
     """ Definition and implementation of the Tensor class.
@@ -46,14 +46,11 @@ class Tensor(object):
     device: str
         Determines on what device the Tensor operations will be
         performed on. Defaults to 'CPU', valid options are
-        ('CPU', 'GPU', 'Rust'). GPU currently not supported. 
+        ('cpu', 'gpu', 'Rust'). GPU currently not supported. 
 
     """
-    def __init__(self,
-            data: Union[Integer, Float, Tuple, List, Array],
-            dtype: Union[Integer, Float, np.float32, np.int16] = np.float32,
-            requires_grad: Boolean = False,
-            device: String = 'CPU') -> None:
+    def __init__(self, data, *args, dtype=np.float32,
+        requires_grad=False, device='cpu', **kwargs) -> None:
 
         if isinstance(data, (list, tuple)):
             data = np.array(data).astype(dtype)
@@ -92,15 +89,16 @@ class Tensor(object):
         return cls(np.eye(dims), **kwargs)
 
     def detach(self) -> Tensor:
-        """ Create a copy of the current Tensor that is not part of the 
-        dynamic DAG. As such, the new Tensor does not, and can not,
+        """ Create a copy of the current tensor that is not part of the 
+        dynamic DAG. As such, the new tensor does not, and can not,
         require grad because it is not part of any context nor DAG.
-        Subsequentially move the Tensor to CPU device, if it was on other.
-        """
-        return Tensor(self.data, dtype=self.dtype, requires_grad=False, device='CPU')
+        Subsequentially move the tensor to cpu device, if it was on other.
 
-    def backward(self, allow_fill=True):
+        """
+        return Tensor(self.data, dtype=self.dtype, requires_grad=False, device='cpu')
+
+    def backward(self, allow_fill=True) -> None:
         """ """
         raise NotImplementedError(
-            f'The backward pass functionality has not yet been implemented for {self}.')
-
+            f'The backward pass functionality has not yet been implemented for {self}.'
+        )
