@@ -22,15 +22,15 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 File created: 2022-11-01
-Last edited:  2022-11-17
+Last updated: 2022-11-18
 """
 
-from typing import Iterable
-from .tensor import Tensor
-from .types import *
+from leaf.tensor import Tensor
+from leaf import nn
+from leaf.types import *
 
-def is_tensor(obj: object) -> bool:
-    """ Returns True if `obj` is a Tensor.
+def is_tensor(obj) -> Boolean:
+    """ Returns True if `obj` is a tensor.
 
     Parameters
     ----------
@@ -38,27 +38,26 @@ def is_tensor(obj: object) -> bool:
         The object to test.
 
     """
-    return isinstance(obj, leaf.Tensor)
+    return isinstance(obj, Tensor)
 
-def are_tensors(objs: Iterable[object]) -> bool:
-    """ Returns True if all objects in `objs` are Tensors.
-    Otherwise returns False, obviously.
+def are_tensors(objs) -> Boolean:
+    """ Returns True if all objects in `objs` are tensors.
 
     Parameters
     ----------
     objs: list | tuple | iterable
-        The iterable object of objects to test.
+        The iterable of objects to test.
 
     """
     return all(map(is_tensor, objs))
 
-# Register all standard CPU ops for Tensor.
+# Register all standard CPU ops for tensor.
 import os
 import inspect
 import importlib
 from functools import partialmethod
 
-def _register_from_import(namespace):
+def _register_from_import(namespace) -> None:
     for name, func in inspect.getmembers(namespace, inspect.isclass):
         setattr(Tensor, name.lower(), partialmethod(func.apply))
 
