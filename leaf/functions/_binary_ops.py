@@ -24,6 +24,7 @@ SOFTWARE.
 File created: 2022-11-05
 Last updated: 2022-11-18
 """
+
 import numpy as np
 import leafrs as rs
 from .function import Function
@@ -50,4 +51,3 @@ class Sub(Function):
     def backward(self, grad) -> Tuple[np.ndarray]:
         xshape, yshape, = self.saved_tensors
         return _unbroadcast(grad, xshape), _unbroadcast(grad, yshape)
-
