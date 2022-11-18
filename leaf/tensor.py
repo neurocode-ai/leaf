@@ -98,7 +98,7 @@ class Tensor(object):
         return Tensor(self.data, dtype=self.dtype, requires_grad=False, device='cpu')
 
     def backward(self, allow_fill=True) -> None:
-        """ """
+        """ Calculate gradient backwards through DAG from reduced tensor. """
         raise NotImplementedError(
             f'The backward pass functionality has not yet been implemented for {self}.'
         )
