@@ -87,6 +87,20 @@ class Tensor(object):
     @classmethod
     def eye(cls, dims, **kwargs) -> Tensor:
         return cls(np.eye(dims), **kwargs)
+    
+    @classmethod
+    def uniform(cls, *shape, low=-1.0, high=1.0, **kwargs) -> Tensor:
+        return cls(
+            np.random.uniform(low, high, size=shape) / np.sqrt(np.prod(shape)),
+            **kwargs,
+        )
+
+    @classmethod
+    def normal(cls, *shape, loc=0.0, scale=1.0, **kwargs):
+        return cls(
+            np.random.normal(loc, scale, size=shape),
+            **kwargs,
+        )
 
     def detach(self) -> Tensor:
         """ Create a copy of the current tensor that is not part of the 
