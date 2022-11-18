@@ -22,9 +22,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 File created: 2022-11-17
-Last edited:  2022-11-17
+Last updated: 2022-11-18
 """
-from .nn import Module, Sequential
+from leaf.nn.nn import Module, Sequential
 
 __all__ = (
     'Module',

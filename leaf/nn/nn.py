@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 File created: 2022-11-17
-Last edited:  2022-11-17
+Last updated: 2022-11-18
 """
 from leaf import Tensor
 
@@ -34,22 +34,22 @@ class Module(object):
     information and implementation details.
 
     """
-    def __call__(self, input_):
+    def __call__(self, input_) -> Tensor:
         raise self.forward(input_)
     
-    def forward(self, input_, *args, **kwargs):
+    def forward(self, input_, *args, **kwargs) -> Tensor:
         """ Each respective neural network module has to implement this depending on funcionality. """
         raise NotImplementedError(
             f'User defined nn.Module {self} has not implemented forward pass.'
         )
     
-    def parameters(self):
+    def parameters(self) -> list:
         pass
 
 class Sequential(object):
-    """ A high-level wrapper for the module object, simplifies the forward pass when multiple
-    operations are needed to perform in order. Follows the same function convention as the
-    main module object, namely, __call__(..), forward(..), and parameters(),
+    """ A high-level wrapper for the module object, simplifies the forward pass when
+    multiple operations are needed to perform in order. Follows the same naming
+    convention as the main module object, namely, __call__() forward() and parameters(),
     that make up the API for neural networks.
 
     Parameters
@@ -58,24 +58,24 @@ class Sequential(object):
         The collection of modules stored sequentially.
 
     """
-    def __init__(self, *modules):
+    def __init__(self, *modules) -> None:
         if not all(isinstance(m, Module) for m in modules):
             raise ValueError(
                 f'Not all objects provided to {self} is a module, {modules}.'
             )
         self._modules = modules
 
-    def __call__(self, input_):
+    def __call__(self, input_) -> Tensor:
         return self.forward(input_)
 
-    def forward(self, input_):
+    def forward(self, input_) -> Tensor:
         """ Return the resulting tensor after applying all sequential forward passes. """
         x = input_
         for module in self._modules:
             x = module(x)
         return x 
 
-    def parameters(self):
+    def parameters(self) -> list:
         """ Return a list of all tensor parameters requiring gradient from stored module objects. """
         params = []
         for module in self._modules:
