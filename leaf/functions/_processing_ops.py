@@ -21,19 +21,19 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-File created: 2022-11-05
+File created: 2022-11-18
 Last updated: 2022-11-18
 """
-import builtins
+
 import numpy as np
-from typing import Union, Tuple, List
+from .function import Function
+from typing import Tuple
 
-# A number of convenient aliases for composite types
-Integer = builtins.int
-Float = builtins.float
-String = builtins.str
-Boolean = builtins.bool
-Array = np.ndarray
-
-Datatype = Union[Integer, Float, np.float32, np.int16]
-Data = Union[Integer, Float, Tuple, List, Array]
+class Matmul(Function):
+    def forward(self, x, y) -> np.ndarray:
+        self.save_for_backward(x, y)
+        return x @ y
+    
+    def backward(self, grad) -> Tuple[np.ndarray]:
+        x, y, = self.saved_tensors
+        return grad @ y.T, x.T @ grad

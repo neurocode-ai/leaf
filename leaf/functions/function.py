@@ -22,32 +22,47 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 File created: 2022-11-05
-Last edited:  2022-11-05
+Last updated: 2022-11-18
 """
+
 import numpy as np
 from leaf import Tensor
 from typing import List
 from leaf.types import Boolean, String
 
-def _tensors_require_grad(*tensors: List[Tensor]) -> Boolean:
+def _tensors_require_grad(*tensors) -> Boolean:
+    """ Return True if any tensor requires gradient calculation. """
     return any(t.requires_grad for t in tensors if isinstance(t, Tensor))
 
-def _verify_tensors(*tensors: List[Tensor]) -> List[np.ndarray]:
+def _verify_tensors(*tensors) -> List[np.ndarray]:
+    """ Return a list of the data stored in the tensors. """
     return [_extract_data(t) for t in tensors]
 
-def _extract_data(tensor: Tensor) -> np.ndarray:
+def _extract_data(tensor) -> np.ndarray:
     """ TEMPORARY!!!! EDIT this function """
     return tensor.data
 
 class Function(object):
-    def __init__(self, device: String, *tensors: List[Tensor]):
+    """ Definition and impelmentation of the Function class.
+
+    Parameters
+    ----------
+    device: str
+        A string representing the device to put resulting tensor on.
+    *tensors: iterable | list | tuple
+        Collection of tensors that are to be used in the defined operation. 
+        For example, two tensors if a binary op is invoked.
+
+    """
+    def __init__(self, device, *tensors) -> None:
         self.parents = [t for t in tensors if isinstance(t, Tensor)]
         self.device = device
         self.saved_tensors = []
         self.requires_grad = _tensors_require_grad(*tensors)
 
-    def save_for_backward(self, *tensors: List[Tensor]):
-        self.saved_tensors.extend(tensors)
+    def save_for_backward(self, *items) -> None:
+        """ Store the provided items during forward pass to later be used. """
+        self.saved_tensors.extend(items)
     
     def forward(self, *args, **kwargs): 
         raise NotImplementedError(f'forward pass not implemented for {type(self)}')
@@ -56,7 +71,18 @@ class Function(object):
         raise NotImplementedError(f'backward pass not implemented for {type(self)}')
     
     @classmethod
-    def apply(cls, *tensors: List[Tensor]) -> Tensor: 
+    def apply(cls, *tensors) -> Tensor: 
+        """ This classmethod constructs a Function, also referred to as a context, when 
+        a tensor invokes an operation. As such, the tensor initially invoking the 
+        call, self, is represented as part of the *tensors arg together with any
+        optional tensors that are to be part of the context. 
+
+        After applying the the op on the provided tensors, a resulting tensor is 
+        created and returned. This tensor is not a leaf node in the DAG, and 
+        contains the context of the op, meaning, it specifies that it was 
+        created through an op and stores the parent tensors.
+
+        """
         context = cls(*tensors[0].device, *tensors)
         results = Tensor(context.forward(*_verify_tensors(*tensors)),
                          requires_grad=context.requires_grad,

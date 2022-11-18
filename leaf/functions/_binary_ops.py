@@ -22,14 +22,15 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 File created: 2022-11-05
-Last edited:  2022-11-09
+Last updated: 2022-11-18
 """
+
 import numpy as np
 import leafrs as rs
 from .function import Function
 from typing import Tuple
 
-def _unbroadcast(arr: np.ndarray, shape: Tuple) -> np.ndarray:
+def _unbroadcast(arr, shape) -> np.ndarray:
     """ Revert broadcasting on an array to desired original shape. """
     return np.lib.stride_tricks.as_stride(arr, shape).copy()
 
@@ -50,4 +51,3 @@ class Sub(Function):
     def backward(self, grad) -> Tuple[np.ndarray]:
         xshape, yshape, = self.saved_tensors
         return _unbroadcast(grad, xshape), _unbroadcast(grad, yshape)
-
