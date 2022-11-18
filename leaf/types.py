@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 File created: 2022-11-05
-Last edited:  2022-11-05
+Last updated: 2022-11-18
 """
 import builtins
 import numpy as np
