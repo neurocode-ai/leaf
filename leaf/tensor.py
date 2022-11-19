@@ -50,7 +50,7 @@ class Tensor(object):
 
     """
     def __init__(self, data, *args, dtype=np.float32,
-        requires_grad=False, device='cpu', **kwargs) -> None:
+        requires_grad=False, device='cpu', _is_leaf=True, **kwargs) -> None:
 
         if isinstance(data, (list, tuple)):
             data = np.array(data).astype(dtype)
@@ -64,7 +64,7 @@ class Tensor(object):
         self.data = data
         self.grad = None
         self._ctx = None
-        self._is_leaf = True
+        self._is_leaf = _is_leaf
         self.device = device
         self.requires_grad = requires_grad
 
