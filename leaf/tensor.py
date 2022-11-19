@@ -50,7 +50,7 @@ class Tensor(object):
 
     """
     def __init__(self, data, *args, dtype=np.float32,
-        requires_grad=False, device='cpu', **kwargs) -> None:
+        requires_grad=False, device='cpu', _is_leaf=True, **kwargs) -> None:
 
         if isinstance(data, (list, tuple)):
             data = np.array(data).astype(dtype)
@@ -64,7 +64,7 @@ class Tensor(object):
         self.data = data
         self.grad = None
         self._ctx = None
-        self._is_leaf = True
+        self._is_leaf = _is_leaf
         self.device = device
         self.requires_grad = requires_grad
 
@@ -87,6 +87,20 @@ class Tensor(object):
     @classmethod
     def eye(cls, dims, **kwargs) -> Tensor:
         return cls(np.eye(dims), **kwargs)
+    
+    @classmethod
+    def uniform(cls, *shape, low=-1.0, high=1.0, **kwargs) -> Tensor:
+        return cls(
+            np.random.uniform(low, high, size=shape) / np.sqrt(np.prod(shape)),
+            **kwargs,
+        )
+
+    @classmethod
+    def normal(cls, *shape, loc=0.0, scale=1.0, **kwargs):
+        return cls(
+            np.random.normal(loc, scale, size=shape),
+            **kwargs,
+        )
 
     def detach(self) -> Tensor:
         """ Create a copy of the current tensor that is not part of the 
