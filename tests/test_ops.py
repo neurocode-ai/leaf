@@ -34,3 +34,11 @@ class TestOps(unittest.TestCase):
         t3 = t1.add(t2)
 
         assert t3.shape == (2, 3, 4)
+
+    def test_sub1(self):
+        t1 = Tensor.ones(2, 3, 4)
+        t2 = Tensor.ones(2, 3, 4)
+        t3 = t1.sub(t2)
+
+        assert t3.shape == (2, 3, 4)
+        assert (t3.data == Tensor.zeros(2, 3, 4).data).all()
