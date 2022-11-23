@@ -25,7 +25,7 @@ File created: 2022-11-23
 Last updated: 2022-11-23
 """
 
-from leaf.criterion.criterion import Criterion
+from leaf.criterion.base import Criterion
 from leaf.criterion.nllloss import NLLLoss
 from leaf.criterion.mseloss import MSELoss
 

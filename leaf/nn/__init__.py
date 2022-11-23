@@ -22,11 +22,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 File created: 2022-11-17
-Last updated: 2022-11-18
+Last updated: 2022-11-23
 """
-from leaf.nn.nn import Module, Sequential
+from leaf.nn.base import Module, Sequential
+from leaf.nn.linear import Linear
 
 __all__ = (
     'Module',
     'Sequential',
+    'Linear',
 )
