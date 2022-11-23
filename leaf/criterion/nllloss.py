@@ -27,7 +27,7 @@ Last updated: 2022-11-23
 
 import numpy as np
 from leaf import Tensor
-from .criterion import Criterion
+from leaf.criterion import Criterion
 
 class NLLLoss(Criterion):
     def apply(self, logits, targets):

@@ -25,7 +25,7 @@ File created: 2022-11-23
 Last updated: 2022-11-23
 """
 from leaf import Tensor
-from .criterion import Criterion
+from leaf.criterion import Criterion
 
 class MSELoss(Criterion):
     def apply(self, preds, targets):
