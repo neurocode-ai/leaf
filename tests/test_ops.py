@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 File created: 2022-11-05
-Last edited:  2022-11-23
+Last edited:  2022-11-25
 """
 
 import unittest
@@ -47,6 +47,7 @@ def _info(s):
     sys.stdout.flush()
 
 def _test_op(shapes, torch_func, leaf_func, name, timeits=10):
+    print('\n')
     _info(f'testing {name} with shapes {shapes}, torch/leaf \n')
     torch_t = [torch.tensor(np.random.random(size=shape), requires_grad=True) for shape in shapes]
     leaf_t = [Tensor(t.detach().numpy(), requires_grad=True) for t in torch_t]
@@ -91,14 +92,14 @@ def _test_op(shapes, torch_func, leaf_func, name, timeits=10):
     
     b_torch_ms = timeit.Timer(partial(
         lambda f, t, b: f(*t)[0].mean().backward() if b else f(*t).mean().backward(),
-        torch_fun,
+        torch_func,
         torch_t,
         _listout_t,
     )).timeit(timeits) * 1000.0 / timeits
     b_leaf_ms = timeit.Timer(partial(
         lambda f, t, b: f(*t)[0].mean().backward() if b else f(*t).mean().backward(),
         leaf_func,
-        leaf_f,
+        leaf_t,
         _listout_l
     )).timeit(timeits) * 1000.0 / timeits
 
