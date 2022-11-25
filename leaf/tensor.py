@@ -111,8 +111,64 @@ class Tensor(object):
         """
         return Tensor(self.data, dtype=self.dtype, requires_grad=False, device='cpu')
 
+    def _topological_sort(self):
+        def _recursive_walk(node, visited, nodes):
+            visited.add(node)
+            if node._ctx:
+                map(
+                    _recursive_walk,
+                    zip(
+                        [n for n in node._ctx.parents if n not in visited],
+                        visited,
+                        nodes,
+                    )
+                )
+                nodes.append(node)
+            return nodes
+        return _recursive_walk(self, set(), [])
+
     def backward(self, allow_fill=True) -> None:
         """ Calculate gradient backwards through DAG from reduced tensor. """
-        raise NotImplementedError(
-            f'The backward pass functionality has not yet been implemented for {self}.'
-        )
+        if allow_fill:
+            self.grad = None
+        
+        if self._ctx is None:
+            return
+        
+        if self.grad is None and allow_fill:
+            assert np.prod(self.shape) == 1, \
+                'You are trying to initiate a backwards propagating call on a tensor ' \
+                'that has not yet been reduced. The expected behaviour is to reduce ' \
+                'your tensor using either ``sum()`` or ``mean``, otherwise implicit ' \
+                'creation of the gradient, i.e. initiating it with ones, might be incorrect.'
+        
+            self.grad = np.ones(self.shape)
+
+        for t in reversed(self._topological_sort()):
+            if not any(tt.requires_grad for tt in t._ctx.parents):
+                continue
+            
+            assert t.grad is not None, \
+                'The parents of the current node requires gradient, but no gradient has ' \
+                'been calculated or initialized for the current node. Make sure that the ' \
+                'current node inherited the correct grad requirements from parents.'
+            
+            parents = t._ctx.parents
+            gradients = t._ctx.backward(t.grad)
+
+            if isinstance(gradients, np.ndarray):
+                gradients = [gradients]
+            
+            for gradient, parent in zip(gradients, parents):
+                if gradient is None:
+                    continue
+                    
+                if parent.requires_grad:
+                    if parent.grad is None:
+                        gradient.flags.writeable = True
+                        parent.grad = gradient
+                    else:
+                        if not parent._is_leaf:
+                            parent.grad = gradient
+                        else:
+                            parent.grad += gradient
