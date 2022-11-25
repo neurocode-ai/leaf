@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 File created: 2022-11-01
-Last edited:  2022-11-06
+Last edited:  2022-11-25
 
 Tutorial on how to bind Python and Rust via NumPy
 https://itnext.io/how-to-bind-python-numpy-with-rust-ndarray-2efa5717ed21
@@ -82,6 +82,10 @@ mod rust_fn {
     pub fn add(x: &ArrayViewD<'_, f32>, y: &ArrayViewD<'_, f32>) -> ArrayD<f32> {
         x + y
     }
+
+    pub fn sub(x: &ArrayViewD<'_, f32>, y: &ArrayViewD<'_, f32>) -> ArrayD<f32> {
+        x - y
+    }
 }
 
 #[pymodule]
@@ -123,6 +127,15 @@ fn leafrs(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
     ) -> &'py PyArrayDyn<f32> {
         let result = rust_fn::add(&x.as_array(), &y.as_array());
         result.into_pyarray(py)
+    }
+
+    #[pyfn(m)]
+    fn sub<'py>(
+        py: Python<'py>,
+        x: PyReadonlyArrayDyn<f32>,
+        y: PyReadonlyArrayDyn<f32>
+    ) -> &'py PyArrayDyn<f32> {
+        let result = rust_fn::sub(&x.as_array(), &y.as_array());
     }
 
     Ok(())
