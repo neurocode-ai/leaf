@@ -42,13 +42,13 @@ np.random.seed(1)
 torch.manual_seed(1)
 
 strformat = '%Y-%m-%d %H:%M:%S'
-def _info(s):
+def _info(s, newline=False):
+    sys.stdout.write('\n') if newline else None
     sys.stdout.write(f'[{datetime.now().strftime(strformat)}] {s}')
     sys.stdout.flush()
 
 def _test_op(shapes, torch_func, leaf_func, name, timeits=10):
-    print('\n')
-    _info(f'testing {name} with shapes {shapes}, torch/leaf \n')
+    _info(f'testing {name} with shapes {shapes}, torch/leaf \n', newline=True)
     torch_t = [torch.tensor(np.random.random(size=shape), requires_grad=True) for shape in shapes]
     leaf_t = [Tensor(t.detach().numpy(), requires_grad=True) for t in torch_t]
 
