@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 File created: 2022-11-01
-Last edited:  2022-11-25
+Last edited:  2022-11-30
 
 Tutorial on how to bind Python and Rust via NumPy
 https://itnext.io/how-to-bind-python-numpy-with-rust-ndarray-2efa5717ed21
@@ -48,8 +48,10 @@ mod rust_fn {
     use ndarray::{arr1, Array1, Array2, ArrayD};
     use ndarray::prelude::*;
     use numpy::ndarray::{ArrayViewD, ArrayView4};
-    use ordered_float::OrderedFloat;
+    use numpy::ndarray::{linalg};
 
+    /*
+    use ordered_float::OrderedFloat;
     pub fn max_min(x: &ArrayViewD<'_, f32>) -> Array1<f32> {
         if x.len() == 0 { return arr1(&[]); }
         let max_val = x
@@ -67,7 +69,9 @@ mod rust_fn {
         let result_array = arr1(&[max_val, min_val]);
         result_array
     }
+    */
 
+    // This function is only used for testing...
     pub fn rusum(x: &ArrayView4<'_, f32>) -> Array2<f32> {
         let xshape = x.shape();
         let mut result_array = Array2::zeros((xshape[0], xshape[1]));
@@ -79,45 +83,53 @@ mod rust_fn {
         result_array
     }
 
-    pub fn add(x: &ArrayViewD<'_, f32>, y: &ArrayViewD<'_, f32>) -> ArrayD<f32> {
+    pub fn add(
+        x: &ArrayViewD<'_, f32>,
+        y: &ArrayViewD<'_, f32>
+    ) -> ArrayD<f32> {
         x + y
     }
 
-    pub fn sub(x: &ArrayViewD<'_, f32>, y: &ArrayViewD<'_, f32>) -> ArrayD<f32> {
+    pub fn sub(
+        x: &ArrayViewD<'_, f32>,
+        y: &ArrayViewD<'_, f32>
+    ) -> ArrayD<f32> {
         x - y
+    }
+
+    // This method does not work...
+    pub fn dot(
+        x: &ArrayViewD<'_, f32>,
+        y: &ArrayViewD<'_, f32>
+    ) -> ArrayD<f32> {
+        x = x.into_dimensionality()?;
+        y = y.into_dimensionality()?;
+        x.dot(y)
     }
 }
 
+// Implements the API for the leafrs module that can be called from Python.
 #[pymodule]
 fn leafrs(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
+    /*
     #[pyfn(m)]
-    fn max_min<'py>(
+    fn max<'py>(
         py: Python<'py>,
         x: PyReadonlyArrayDyn<f32>
-    ) -> &'py PyArray1<f32> {
-        let array = x.as_array();
-        let result_array = rust_fn::max_min(&array);
-        result_array.into_pyarray(py)
+    ) -> &'py PyArrayDyn<f32> {
+        let result = rust_fn::max(&x.as_array());
+        result.into_pyarray(py)
     }
 
     #[pyfn(m)]
-    fn rusum<'py>(
+    fn min<'py>(
         py: Python<'py>,
-        x: PyReadonlyArray4<f32>
-    ) -> &'py PyArray2<f32> {
-        let array = x.as_array();
-        let rustsum = rust_fn::rusum(&array);
-        rustsum.into_pyarray(py)
+        x: PyReadonlyArrayDyn<f32>
+    ) -> &'py PyArrayDyn<f32> {
+        let result = rust_fn::max(&x.as_array());
+        result.into_pyarray(py)
     }
-
-    #[pyfn(m)]
-    fn eye<'py>(
-        py: Python<'py>,
-        size: usize
-    ) -> &PyArray2<f32> {
-        let array = ndarray::Array::eye(size);
-        array.into_pyarray(py)
-    }
+    */
 
     #[pyfn(m)]
     fn add<'py>(
@@ -136,6 +148,27 @@ fn leafrs(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
         y: PyReadonlyArrayDyn<f32>
     ) -> &'py PyArrayDyn<f32> {
         let result = rust_fn::sub(&x.as_array(), &y.as_array());
+        result.into_pyarray(py)
+    }
+
+    #[pyfn(m)]
+    fn dot<'py>(
+        py: Python<'py>,
+        x: PyReadonlyArrayDyn<f32>,
+        y: PyReadonlyArrayDyn<f32>
+    ) -> &'py PyArrayDyn<f32> {
+        let result = rust_fn::dot(&x.as_array(), &y.as_array());
+        result.into_pyarray(py)
+    }
+
+    // This function is only used for testing...
+    #[pyfn(m)]
+    fn rusum<'py>(
+        py: Python<'py>,
+        x: PyReadonlyArray4<f32>
+    ) -> &'py PyArray2<f32> {
+        let result = rust_fn::rusum(&x.as_array());
+        result.into_pyarray(py)
     }
 
     Ok(())
