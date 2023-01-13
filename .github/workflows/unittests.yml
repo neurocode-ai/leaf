@@ -27,7 +27,7 @@ jobs:
       run: |
         python3 -m pip install --upgrade pip
         python3 -m venv venv
-        python3 -m pip install -r requirements
+        python3 -m pip install -r requirements.txt
         source venv/bin/activate
         make
         python3 -m unittest
