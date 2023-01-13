@@ -41,31 +41,18 @@ use pyo3::prelude::{
     Python
 };
 
-mod rust_fn {
-    use ndarray::{arr1, Array1, Array2, ArrayD};
+// Declare the scope/module for function specific implementations, called from Python
+// through the created maturin bindings of the `PyO3` crate. Inside this scope
+// we operate on the dynamic arrays specified by the `ndarray` crate. The `numpy`
+// crate used in the outer scope is only used as API for the native C bindings.
+mod RUST_BACKEND {
+    use ndarray::{Array2, ArrayD};
     use ndarray::prelude::*;
     use numpy::ndarray::{ArrayViewD, ArrayView4};
-    use ordered_float::OrderedFloat;
 
-    pub fn max_min(x: &ArrayViewD<'_, f32>) -> Array1<f32> {
-        if x.len() == 0 { return arr1(&[]); }
-        let max_val = x
-            .iter()
-            .map(|a| OrderedFloat(*a))
-            .max()
-            .expect("Error calculating max value.")
-            .0;
-        let min_val = x
-            .iter()
-            .map(|a| OrderedFloat(*a))
-            .min()
-            .expect("Error calculating min value.")
-            .0;
-        let result_array = arr1(&[max_val, min_val]);
-        result_array
-    }
-
-    pub fn rusum(x: &ArrayView4<'_, f32>) -> Array2<f32> {
+    // BACKEND FUNC, only used in Python vs Rust performance example.
+    // Calculates the sum of a 4 dimensional f32 matrix.
+    pub fn EXAMPLE_MATRIX_SUM(x: &ArrayView4<'_, f32>) -> Array2<f32> {
         let xshape = x.shape();
         let mut result_array = Array2::zeros((xshape[0], xshape[1]));
         for h in 0..xshape[2] {
@@ -76,49 +63,58 @@ mod rust_fn {
         result_array
     }
 
-    pub fn add(x: &ArrayViewD<'_, f32>, y: &ArrayViewD<'_, f32>) -> ArrayD<f32> {
+    // BACKEND FUNC, performs addition on two ndarrays.
+    pub fn add(
+        x: &ArrayViewD<'_, f32>,
+        y: &ArrayViewD<'_, f32>
+    ) -> ArrayD<f32> {
         x + y
+    }
+
+    // BACKEND FUNC, performs subtraction on two ndarrays.
+    // z = y + x
+    pub fn sub(
+        x: &ArrayViewD<'_, f32>,
+        y: &ArrayViewD<'_, f32>
+    ) -> ArrayD<f32> {
+        x - y
     }
 }
 
 #[pymodule]
 fn leafrs(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
-    #[pyfn(m)]
-    fn max_min<'py>(
-        py: Python<'py>,
-        x: PyReadonlyArrayDyn<f32>
-    ) -> &'py PyArray1<f32> {
-        let array = x.as_array();
-        let result_array = rust_fn::max_min(&array);
-        result_array.into_pyarray(py)
-    }
 
+    // Unary operator, calculates the sum of a 4D matrix/tensor.
+    // ONLY USED IN EXAMPLE SCRIPT COMPARING PYTHON AND RUST SPEED!
     #[pyfn(m)]
-    fn rusum<'py>(
+    fn EXAMPLE_MATRIX_SUM<'py>(
         py: Python<'py>,
         x: PyReadonlyArray4<f32>
     ) -> &'py PyArray2<f32> {
-        let array = x.as_array();
-        let rustsum = rust_fn::rusum(&array);
-        rustsum.into_pyarray(py)
+        let arr = x.as_array();
+        let sum = RUST_BACKEND::EXAMPLE_MATRIX_SUM(&arr);
+        sum.into_pyarray(py)
     }
 
-    #[pyfn(m)]
-    fn eye<'py>(
-        py: Python<'py>,
-        size: usize
-    ) -> &PyArray2<f32> {
-        let array = ndarray::Array::eye(size);
-        array.into_pyarray(py)
-    }
-
+    // Binary operator, performs addition on two ndarrays.
     #[pyfn(m)]
     fn add<'py>(
         py: Python<'py>,
         x: PyReadonlyArrayDyn<f32>,
         y: PyReadonlyArrayDyn<f32>
     ) -> &'py PyArrayDyn<f32> {
-        let result = rust_fn::add(&x.as_array(), &y.as_array());
+        let result = RUST_BACKEND::add(&x.as_array(), &y.as_array());
+        result.into_pyarray(py)
+    }
+
+    // Binary operator, performs subtraction on two ndarrays.
+    #[pyfn(m)]
+    fn sub<'py>(
+        py: Python<'py>,
+        x: PyReadonlyArrayDyn<f32>,
+        y: PyReadonlyArrayDyn<f32>
+    ) -> &'py PyArrayDyn<f32> {
+        let result = RUST_BACKEND::sub(&x.as_array(), &y.as_array());
         result.into_pyarray(py)
     }
 
