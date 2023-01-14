@@ -66,7 +66,7 @@ info(f'Time: {t_py:.3f} seconds\n')
 
 info('Starting Rust API job...')
 t_rustart = time.time()
-rusum = rs.EXAMPLE_MATRIX_SUM(data).sum()
+rusum = rs.example_matrix_sum(data).sum()
 t_ru = time.time() - t_rustart
 info('OK\n', strftime=False)
 info(f'Time: {t_ru:.3f} seconds\n')

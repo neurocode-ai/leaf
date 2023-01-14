@@ -25,10 +25,8 @@
 // Last updated: 2023-01-13
 //
 
-use ndarray;
 use numpy::{
     IntoPyArray,
-    PyArray1,
     PyArray2,
     PyArrayDyn,
     PyReadonlyArrayDyn,
@@ -52,7 +50,7 @@ mod RUST_BACKEND {
 
     // BACKEND FUNC, only used in Python vs Rust performance example.
     // Calculates the sum of a 4 dimensional f32 matrix.
-    pub fn EXAMPLE_MATRIX_SUM(x: &ArrayView4<'_, f32>) -> Array2<f32> {
+    pub fn _example_matrix_sum(x: &ArrayView4<'_, f32>) -> Array2<f32> {
         let xshape = x.shape();
         let mut result_array = Array2::zeros((xshape[0], xshape[1]));
         for h in 0..xshape[2] {
@@ -87,12 +85,12 @@ fn leafrs(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
     // Unary operator, calculates the sum of a 4D matrix/tensor.
     // ONLY USED IN EXAMPLE SCRIPT COMPARING PYTHON AND RUST SPEED!
     #[pyfn(m)]
-    fn EXAMPLE_MATRIX_SUM<'py>(
+    fn example_matrix_sum<'py>(
         py: Python<'py>,
         x: PyReadonlyArray4<f32>
     ) -> &'py PyArray2<f32> {
         let arr = x.as_array();
-        let sum = RUST_BACKEND::EXAMPLE_MATRIX_SUM(&arr);
+        let sum = RUST_BACKEND::_example_matrix_sum(&arr);
         sum.into_pyarray(py)
     }
 
