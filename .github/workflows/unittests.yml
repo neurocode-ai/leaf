@@ -2,9 +2,9 @@ name: Unit tests
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
   pull_request:
-    branches: [main]
+    branches: [ main ]
 
 jobs:
   unit-tests-CPU:
@@ -18,10 +18,10 @@ jobs:
     - name: Update packages
       run: sudo apt-get update
 
-#    - name: Set up Python 3.8
-#      uses: actions/setup-python@v2
-#      with:
-#        python-version: "3.8"
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v2
+      with:
+        python-version: "3.8"
 
     - name: Dependencies, build and test
       run: |
@@ -29,5 +29,5 @@ jobs:
         python3 -m venv venv
         python3 -m pip install -r requirements.txt
         source venv/bin/activate
-        make
+        make build
         python3 -m unittest

@@ -22,7 +22,7 @@
 // SOFTWARE.
 //
 // File created: 2022-11-01
-// Last updated: 2023-01-13
+// Last updated: 2023-01-14
 //
 
 use numpy::{
@@ -43,6 +43,7 @@ use pyo3::prelude::{
 // through the created maturin bindings of the `PyO3` crate. Inside this scope
 // we operate on the dynamic arrays specified by the `ndarray` crate. The `numpy`
 // crate used in the outer scope is only used as API for the native C bindings.
+#[allow(non_snake_case)]
 mod RUST_BACKEND {
     use ndarray::{Array2, ArrayD};
     use ndarray::prelude::*;

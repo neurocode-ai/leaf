@@ -25,7 +25,7 @@ jobs:
         python3 -m venv venv
         python3 -m pip install -r requirements.txt
         source venv/bin/activate
-        make
+        make build
 
   build-macos:
     runs-on: macos-latest
@@ -42,5 +42,4 @@ jobs:
         python3 -m venv venv
         python3 -m pip install -r requirements.txt
         source venv/bin/activate
-        make
-
+        make build
