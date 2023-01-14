@@ -22,7 +22,7 @@
 # SOFTWARE.
 #
 # File created: 2022-11-05
-# Last updated: 2023-01-13
+# Last updated: 2023-01-14
 #
 
 import numpy as np
@@ -39,11 +39,11 @@ def _verify_tensors(*tensors) -> List[np.ndarray]:
     return [_extract_data(t) for t in tensors]
 
 def _extract_data(tensor) -> np.ndarray:
-    """ TEMPORARY!!!! EDIT this function """
     return tensor.data
 
 class Function(object):
-    """ Definition and impelmentation of the Function class.
+    """
+    Definition and impelmentation of the Function class.
 
     Parameters
     ----------
@@ -72,7 +72,8 @@ class Function(object):
     
     @classmethod
     def apply(cls, *tensors) -> Tensor: 
-        """ This classmethod constructs a Function, also referred to as a context, when 
+        """
+        This classmethod constructs a Function, also referred to as a context, when 
         a tensor invokes an operation. As such, the tensor initially invoking the 
         call, self, is represented as part of the *tensors arg together with any
         optional tensors that are to be part of the context. 
