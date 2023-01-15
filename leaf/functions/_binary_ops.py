@@ -22,7 +22,7 @@
 # SOFTWARE.
 #
 # File created: 2022-11-05
-# Last updated: 2023-01-13
+# Last updated: 2023-01-14
 #
 
 import numpy as np
@@ -37,7 +37,7 @@ def _unbroadcast(arr, shape) -> np.ndarray:
 class Add(Function):
     def forward(self, x, y) -> np.ndarray:
         self.save_for_backward(x.shape, y.shape)
-        return rs.add(x, y)
+        return x + y
     
     def backward(self, grad) -> Tuple[np.ndarray]:
         xshape, yshape, = self.saved_tensors

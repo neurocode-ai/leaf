@@ -22,7 +22,7 @@
 # SOFTWARE.
 #
 # File created: 2022-11-01
-# Last updated: 2023-01-13
+# Last updated: 2023-01-14
 #
 
 import leafrs as rs
@@ -50,7 +50,7 @@ dimensions = tuple([int(d) for d in args.d])
 
 info('Running performance test Python vs Rust API\n')
 info(f'Generating test data with shape: {dimensions}...')
-data = np.random.rand(*dimensions)
+data = np.random.rand(*dimensions).astype(np.float32)
 info('OK\n', strftime=False)
 
 pysum = 0
@@ -66,7 +66,7 @@ info(f'Time: {t_py:.3f} seconds\n')
 
 info('Starting Rust API job...')
 t_rustart = time.time()
-rusum = rs.rusum(data).sum()
+rusum = rs.example_matrix_sum(data).sum()
 t_ru = time.time() - t_rustart
 info('OK\n', strftime=False)
 info(f'Time: {t_ru:.3f} seconds\n')

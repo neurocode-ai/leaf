@@ -2,13 +2,12 @@ name: Unit tests
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
   pull_request:
-    branches: [main]
-
+    branches: [ main ]
 
 jobs:
-  testsCPU:
+  unit-tests-CPU:
     name: CPU Tests
     runs-on: ubuntu-latest
 
@@ -23,10 +22,12 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: "3.8"
+
     - name: Dependencies, build and test
       run: |
         python3 -m pip install --upgrade pip
         python3 -m venv venv
+        python3 -m pip install -r requirements.txt
         source venv/bin/activate
-        make
+        make build
         python3 -m unittest

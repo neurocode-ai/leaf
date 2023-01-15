@@ -22,7 +22,7 @@
 # SOFTWARE.
 #
 # File created: 2022-11-01
-# Last updated: 2023-01-13
+# Last updated: 2023-01-14
 #
 
 from __future__ import annotations
@@ -30,7 +30,8 @@ from typing import Union, Tuple, List
 import numpy as np
 
 class Tensor(object):
-    """ Definition and implementation of the Tensor class.
+    """
+    Definition and implementation of the Tensor class.
 
     Parameters
     ----------
@@ -103,7 +104,8 @@ class Tensor(object):
         )
 
     def detach(self) -> Tensor:
-        """ Create a copy of the current tensor that is not part of the 
+        """
+        Create a copy of the current tensor that is not part of the 
         dynamic DAG. As such, the new tensor does not, and can not,
         require grad because it is not part of any context nor DAG.
         Subsequentially move the tensor to cpu device, if it was on other.

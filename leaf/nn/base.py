@@ -22,13 +22,14 @@
 # SOFTWARE.
 #
 # File created: 2022-11-01
-# Last updated: 2023-01-13
+# Last updated: 2023-01-14
 #
 
 from leaf import Tensor
 
 class Module(object):
-    """ Parent class for the neural network building blocks, i.e. so called Modules.
+    """
+    Parent class for the neural network building blocks, i.e. so called Modules.
     They each define specific forward pass functionality based on their needs that 
     is invoked by calling the module object with the input tensor. No __init__ method
     is defined for parent class, please see respective implementations for specific
@@ -45,13 +46,23 @@ class Module(object):
         )
     
     def parameters(self) -> list:
-        pass
+        params = []
+        for attr in self.__dict__.values():
+            if isinstance(attr, Tensor):
+                params.extend([attr] if attr.requires_grad else [])
+            if isinstance(attr, (tuple, list)):
+                params.extend([p for p in attr if p.requires_grad])
+            if isinstance(attr, (Module, Sequential)):
+                # recursive call to find learnable parameter modules
+                params.extend([p for p in attr.parameters() if p.requires_grad])
+
 
 class Sequential(object):
-    """ A high-level wrapper for the module object, simplifies the forward pass when
+    """
+    A high-level wrapper for the module object, simplifies the forward pass when
     multiple operations are needed to perform in order. Follows the same naming
-    convention as the main module object, namely, __call__() forward() and parameters(),
-    that make up the API for neural networks.
+    convention as the main module object with `__call__`, `forward` and 
+    `parameters`, that make up the API for neural networks.
 
     Parameters
     ----------

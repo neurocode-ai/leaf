@@ -22,14 +22,15 @@
 # SOFTWARE.
 #
 # File created: 2022-11-18
-# Last updated: 2023-01-13
+# Last updated: 2023-01-14
 #
 
 from leaf import Tensor
 from leaf.nn import Module
 
 class Linear(Module):
-    """ Linear layer implementation as a neural network module.
+    """ 
+    Linear layer implementation as a neural network module.
     This module requires input to be 2D tensor, allowing standard matmul op.
 
     Parameters
@@ -49,7 +50,8 @@ class Linear(Module):
         self._bias = Tensor.uniform(fan_out, requires_grad=True) if bias else None
     
     def forward(self, input_) -> Tensor:
-        """ Propagate data through a linear layer, performing linear transform operation.
+        """
+        Propagate data through a linear layer, performing the linear transform operation.
 
         Parameters
         ----------
